@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luxe Interiors — Crafting Dream Spaces</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/10.3.1/swiper-bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/10.3.1/swiper-bundle.min.css">
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8C97A;
+  --gold-dim: rgba(201,168,76,0.15);
+  --cream: #F5EFE0;
+  --warm-white: #FAF7F2;
+  --charcoal: #141110;
+  --deep-brown: #1E1510;
+  --mid-brown: #5C3D28;
+  --soft-brown: #A8876A;
+  --sage: #7A9180;
+  --terracotta: #B8613E;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--charcoal);color:var(--cream);overflow-x:hidden;cursor:none;}
+
+/* CURSOR */
+.cursor{width:10px;height:10px;background:var(--gold);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s;}
+.cursor-ring{width:32px;height:32px;border:1px solid rgba(201,168,76,0.6);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all 0.25s cubic-bezier(.25,.46,.45,.94);}
+body:has(a:hover) .cursor{transform:translate(-50%,-50%) scale(2.5);}
+body:has(button:hover) .cursor{transform:translate(-50%,-50%) scale(2.5);}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:all 0.4s ease;}
+nav.scrolled{background:rgba(20,17,16,0.96);backdrop-filter:blur(20px);padding:14px 60px;border-bottom:1px solid rgba(201,168,76,0.15);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;letter-spacing:4px;color:var(--cream);text-decoration:none;}
+.nav-logo span{color:var(--gold);}
+.nav-links{display:flex;gap:36px;list-style:none;align-items:center;}
+.nav-links a{font-size:0.7rem;letter-spacing:2.5px;text-transform:uppercase;color:rgba(245,239,224,0.65);text-decoration:none;transition:color 0.3s;font-weight:300;}
+.nav-links a:hover{color:var(--gold);}
+.btn-outline{border:1px solid var(--gold);color:var(--gold)!important;padding:9px 24px;transition:all 0.3s!important;}
+.btn-outline:hover{background:var(--gold)!important;color:var(--charcoal)!important;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:none;background:none;border:none;padding:4px;}
+.hamburger span{width:24px;height:1px;background:var(--cream);display:block;transition:all 0.3s;}
+
+/* HERO */
+#hero{height:100vh;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(20,17,16,0.88) 0%,rgba(44,28,16,0.35) 55%,rgba(20,17,16,0.75) 100%);z-index:2;}
+.hero-content{position:relative;z-index:3;text-align:center;max-width:860px;padding:0 40px;}
+.hero-eyebrow{font-size:0.68rem;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;opacity:0;transform:translateY(20px);}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,7vw,6.5rem);font-weight:300;line-height:1.05;letter-spacing:-1px;margin-bottom:28px;opacity:0;transform:translateY(30px);}
+.hero-title em{font-style:italic;color:var(--gold-light);}
+.hero-subtitle{font-size:clamp(0.85rem,1.5vw,1rem);font-weight:300;letter-spacing:1px;color:rgba(245,239,224,0.7);line-height:1.8;max-width:520px;margin:0 auto 40px;opacity:0;transform:translateY(20px);}
+.hero-btns{display:flex;gap:16px;justify-content:center;opacity:0;transform:translateY(20px);}
+.btn-gold{background:var(--gold);color:var(--charcoal);padding:14px 36px;font-family:'Outfit',sans-serif;font-size:0.72rem;letter-spacing:2.5px;text-transform:uppercase;border:none;cursor:none;font-weight:500;transition:all 0.3s;text-decoration:none;display:inline-block;}
+.btn-gold:hover{background:var(--gold-light);transform:translateY(-2px);}
+.btn-ghost{background:transparent;border:1px solid rgba(245,239,224,0.4);color:var(--cream);padding:14px 36px;font-family:'Outfit',sans-serif;font-size:0.72rem;letter-spacing:2.5px;text-transform:uppercase;cursor:none;font-weight:300;transition:all 0.3s;text-decoration:none;display:inline-block;}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+.hero-scroll{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;}
+.hero-scroll span{font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:rgba(245,239,224,0.4);}
+.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollPulse 2s ease-in-out infinite;}
+@keyframes scrollPulse{0%,100%{opacity:0.4;transform:scaleY(1);}50%{opacity:1;transform:scaleY(1.1);}}
+
+/* PAINT SPLASH PARTICLES */
+.splash-particle{position:absolute;border-radius:50%;pointer-events:none;z-index:4;opacity:0;}
+
+/* SECTION BASE */
+section{padding:100px 60px;}
+.section-tag{font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:block;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,4vw,3.8rem);font-weight:300;line-height:1.15;margin-bottom:24px;}
+.section-line{width:60px;height:1px;background:var(--gold);margin-bottom:40px;}
+.reveal{opacity:0;transform:translateY(40px);transition:all 0.8s cubic-bezier(.25,.46,.45,.94);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ABOUT */
+#about{background:var(--deep-brown);position:relative;overflow:hidden;}
+#about::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%);pointer-events:none;}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1200px;margin:0 auto;}
+.about-visual{position:relative;}
+.about-main-img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;}
+.about-main-img-placeholder{width:100%;aspect-ratio:4/5;background:linear-gradient(135deg,var(--mid-brown),var(--charcoal));display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.about-main-img-placeholder::after{content:'LUXE INTERIORS';font-family:'Cormorant Garamond',serif;font-size:0.7rem;letter-spacing:4px;color:rgba(201,168,76,0.3);}
+.about-accent-box{position:absolute;bottom:-30px;right:-30px;width:160px;height:160px;background:var(--gold);display:flex;align-items:center;justify-content:center;flex-direction:column;}
+.about-accent-box .num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:var(--charcoal);line-height:1;}
+.about-accent-box .lbl{font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--charcoal);opacity:0.8;}
+.about-text .section-title{color:var(--cream);}
+.about-text p{font-size:0.95rem;line-height:1.9;color:rgba(245,239,224,0.7);margin-bottom:20px;font-weight:300;}
+.about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px;padding-top:40px;border-top:1px solid rgba(201,168,76,0.15);}
+.stat-item .num{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;color:var(--gold);line-height:1;}
+.stat-item .lbl{font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:rgba(245,239,224,0.5);margin-top:4px;}
+
+/* SERVICES */
+#services{background:var(--charcoal);}
+.services-header{max-width:1200px;margin:0 auto 60px;display:flex;justify-content:space-between;align-items:flex-end;}
+.services-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.service-card{background:var(--deep-brown);padding:48px 40px;position:relative;overflow:hidden;transition:all 0.4s ease;group:;}
+.service-card::before{content:'';position:absolute;bottom:0;left:0;width:100%;height:3px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform 0.4s ease;}
+.service-card:hover::before{transform:scaleX(1);}
+.service-card:hover{transform:translateY(-4px);}
+.service-icon{width:48px;height:48px;margin-bottom:28px;position:relative;}
+.service-icon svg{width:100%;height:100%;stroke:var(--gold);fill:none;stroke-width:1.5;}
+.service-num{position:absolute;top:40px;right:40px;font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:rgba(201,168,76,0.08);line-height:1;}
+.service-card h3{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;margin-bottom:16px;color:var(--cream);}
+.service-card p{font-size:0.88rem;line-height:1.8;color:rgba(245,239,224,0.55);font-weight:300;}
+.service-link{display:inline-flex;align-items:center;gap:8px;margin-top:24px;font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:gap 0.3s;}
+.service-link:hover{gap:14px;}
+
+/* WORKS / PORTFOLIO */
+#works{background:var(--deep-brown);padding-bottom:60px;}
+.works-header{max-width:1200px;margin:0 auto 50px;}
+.works-filter{display:flex;gap:8px;margin-top:24px;flex-wrap:wrap;}
+.filter-btn{background:transparent;border:1px solid rgba(245,239,224,0.15);color:rgba(245,239,224,0.5);padding:8px 22px;font-family:'Outfit',sans-serif;font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;cursor:none;transition:all 0.3s;}
+.filter-btn.active,.filter-btn:hover{border-color:var(--gold);color:var(--gold);}
+.works-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:3px;}
+.work-card{position:relative;overflow:hidden;aspect-ratio:4/3;cursor:none;}
+.work-card.wide{grid-column:span 2;}
+.work-card.tall{grid-row:span 2;aspect-ratio:unset;}
+.work-img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease;}
+.work-img-placeholder{width:100%;height:100%;background:linear-gradient(135deg,var(--mid-brown) 0%,var(--charcoal) 100%);display:flex;align-items:flex-end;padding:24px;transition:transform 0.6s ease;}
+.work-card:hover .work-img-placeholder{transform:scale(1.05);}
+.work-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,17,16,0.9) 0%,transparent 60%);opacity:0;transition:opacity 0.4s ease;display:flex;align-items:flex-end;padding:28px;}
+.work-card:hover .work-overlay{opacity:1;}
+.work-info h4{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--cream);}
+.work-info span{font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
+.work-label{font-family:'Cormorant Garamond',serif;font-size:1rem;color:rgba(245,239,224,0.4);font-style:italic;}
+
+/* PRODUCTS */
+#products{background:var(--charcoal);}
+.products-header{max-width:1200px;margin:0 auto 60px;}
+.products-row{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
+.product-card{background:var(--deep-brown);padding:32px 28px;text-align:center;transition:all 0.4s ease;border:1px solid transparent;}
+.product-card:hover{border-color:rgba(201,168,76,0.25);transform:translateY(-6px);}
+.product-logo{height:60px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
+.product-logo-text{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:var(--gold-light);letter-spacing:3px;}
+.product-card h4{font-size:0.9rem;font-weight:500;color:var(--cream);margin-bottom:8px;}
+.product-card p{font-size:0.8rem;line-height:1.7;color:rgba(245,239,224,0.5);font-weight:300;}
+.product-tag{display:inline-block;margin-top:14px;font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.3);padding:4px 12px;}
+
+/* TESTIMONIALS */
+#testimonials{background:var(--deep-brown);overflow:hidden;}
+.testimonials-inner{max-width:1200px;margin:0 auto;}
+.testimonials-header{margin-bottom:60px;}
+.swiper-testimonials{padding-bottom:50px!important;}
+.testi-card{background:var(--charcoal);padding:48px 40px;position:relative;}
+.testi-card::before{content:'\201C';font-family:'Cormorant Garamond',serif;font-size:8rem;line-height:0.7;color:rgba(201,168,76,0.12);position:absolute;top:32px;left:28px;}
+.testi-text{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;line-height:1.8;color:rgba(245,239,224,0.85);margin-bottom:32px;font-weight:300;position:relative;z-index:1;}
+.testi-author{display:flex;align-items:center;gap:16px;}
+.testi-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--mid-brown),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--cream);}
+.testi-name{font-weight:500;font-size:0.9rem;color:var(--cream);}
+.testi-role{font-size:0.7rem;letter-spacing:1px;color:var(--gold);text-transform:uppercase;margin-top:2px;}
+.testi-stars{color:var(--gold);font-size:0.8rem;margin-bottom:12px;letter-spacing:2px;}
+.swiper-pagination-bullet{background:rgba(201,168,76,0.3)!important;width:6px!important;height:6px!important;}
+.swiper-pagination-bullet-active{background:var(--gold)!important;width:24px!important;border-radius:3px!important;}
+
+/* CONTACT */
+#contact{background:var(--charcoal);}
+.contact-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1.4fr;gap:80px;align-items:start;}
+.contact-info h2{margin-bottom:20px;}
+.contact-info p{font-size:0.92rem;line-height:1.9;color:rgba(245,239,224,0.6);font-weight:300;margin-bottom:40px;}
+.contact-details{display:flex;flex-direction:column;gap:20px;}
+.contact-item{display:flex;align-items:flex-start;gap:16px;}
+.contact-item-icon{width:40px;height:40px;border:1px solid rgba(201,168,76,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.contact-item-icon svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:1.5;}
+.contact-item-text .label{font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.contact-item-text .value{font-size:0.9rem;color:var(--cream);font-weight:300;}
+
+/* ENQUIRY FORM */
+.enquiry-form{background:var(--deep-brown);padding:48px;}
+.enquiry-form h3{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:8px;color:var(--cream);}
+.enquiry-form .sub{font-size:0.8rem;color:rgba(245,239,224,0.5);margin-bottom:32px;letter-spacing:1px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.form-group{display:flex;flex-direction:column;margin-bottom:16px;}
+.form-group label{font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:rgba(245,239,224,0.5);margin-bottom:8px;}
+.form-group input,.form-group select,.form-group textarea{background:rgba(245,239,224,0.04);border:1px solid rgba(245,239,224,0.1);color:var(--cream);padding:13px 16px;font-family:'Outfit',sans-serif;font-size:0.88rem;font-weight:300;outline:none;transition:border-color 0.3s;resize:none;cursor:none;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold);}
+.form-group select option{background:var(--charcoal);}
+.send-options{display:flex;gap:12px;margin-top:8px;}
+.btn-whatsapp{background:#25D366;color:#fff;border:none;padding:14px 28px;font-family:'Outfit',sans-serif;font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;cursor:none;font-weight:500;transition:all 0.3s;flex:1;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-whatsapp:hover{background:#1ebe5a;transform:translateY(-2px);}
+.btn-telegram{background:#229ED9;color:#fff;border:none;padding:14px 28px;font-family:'Outfit',sans-serif;font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;cursor:none;font-weight:500;transition:all 0.3s;flex:1;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-telegram:hover{background:#1a8fc2;transform:translateY(-2px);}
+
+/* FOOTER */
+footer{background:var(--deep-brown);padding:60px 60px 30px;border-top:1px solid rgba(201,168,76,0.1);}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;margin-bottom:50px;}
+.footer-brand .nav-logo{display:inline-block;margin-bottom:16px;}
+.footer-brand p{font-size:0.85rem;line-height:1.8;color:rgba(245,239,224,0.45);font-weight:300;max-width:260px;}
+.footer-col h5{font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.footer-col ul a{font-size:0.85rem;color:rgba(245,239,224,0.45);text-decoration:none;font-weight:300;transition:color 0.3s;}
+.footer-col ul a:hover{color:var(--cream);}
+.footer-bottom{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid rgba(245,239,224,0.05);}
+.footer-bottom p{font-size:0.75rem;color:rgba(245,239,224,0.3);font-weight:300;}
+.social-links{display:flex;gap:16px;}
+.social-links a{width:34px;height:34px;border:1px solid rgba(245,239,224,0.1);display:flex;align-items:center;justify-content:center;transition:all 0.3s;text-decoration:none;}
+.social-links a:hover{border-color:var(--gold);}
+.social-links a svg{width:16px;height:16px;stroke:rgba(245,239,224,0.4);fill:none;stroke-width:1.5;}
+.social-links a:hover svg{stroke:var(--gold);}
+
+/* ADMIN PANEL */
+#admin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9000;backdrop-filter:blur(8px);}
+#admin-panel{display:none;position:fixed;top:0;right:0;width:480px;height:100vh;background:#0e0c0b;border-left:1px solid rgba(201,168,76,0.2);z-index:9001;overflow-y:auto;padding:32px;}
+#admin-panel.open{display:block;}
+#admin-overlay.open{display:block;}
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid rgba(201,168,76,0.15);}
+.admin-header h2{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--gold);}
+.admin-close{background:none;border:1px solid rgba(245,239,224,0.15);color:var(--cream);width:36px;height:36px;cursor:pointer;font-size:1rem;transition:all 0.3s;}
+.admin-close:hover{border-color:var(--gold);color:var(--gold);}
+.admin-section{margin-bottom:28px;}
+.admin-section h3{font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.admin-field{margin-bottom:12px;}
+.admin-field label{font-size:0.68rem;color:rgba(245,239,224,0.45);display:block;margin-bottom:5px;letter-spacing:1px;}
+.admin-field input,.admin-field textarea,.admin-field select{width:100%;background:rgba(245,239,224,0.04);border:1px solid rgba(245,239,224,0.1);color:var(--cream);padding:9px 12px;font-family:'Outfit',sans-serif;font-size:0.82rem;outline:none;transition:border-color 0.3s;resize:none;}
+.admin-field input:focus,.admin-field textarea:focus{border-color:var(--gold);}
+.btn-save-admin{width:100%;background:var(--gold);color:var(--charcoal);border:none;padding:13px;font-family:'Outfit',sans-serif;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-weight:600;margin-top:8px;transition:all 0.3s;}
+.btn-save-admin:hover{background:var(--gold-light);}
+.admin-login{display:flex;flex-direction:column;gap:16px;padding:40px 0;}
+.admin-login h3{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--cream);margin-bottom:8px;}
+.admin-login p{font-size:0.8rem;color:rgba(245,239,224,0.4);margin-bottom:24px;}
+.admin-trigger{position:fixed;bottom:24px;right:24px;background:var(--gold);color:var(--charcoal);border:none;padding:10px 18px;font-family:'Outfit',sans-serif;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;z-index:500;font-weight:600;opacity:0.7;transition:opacity 0.3s;}
+.admin-trigger:hover{opacity:1;}
+
+/* SCROLL PROGRESS */
+.scroll-progress{position:fixed;top:0;left:0;height:2px;background:var(--gold);z-index:2000;transition:width 0.1s;}
+
+/* GRAIN OVERLAY */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:4000;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");background-size:200px 200px;}
+
+/* PAINT SPLASH ANIMATION */
+@keyframes splashIn{0%{opacity:0;transform:scale(0) translate(-50%,-50%);}50%{opacity:0.8;}100%{opacity:0;transform:scale(3) translate(-50%,-50%);}}
+
+/* MARQUEE */
+.marquee-wrap{overflow:hidden;padding:16px 0;border-top:1px solid rgba(201,168,76,0.1);border-bottom:1px solid rgba(201,168,76,0.1);background:rgba(201,168,76,0.03);}
+.marquee-track{display:flex;gap:60px;animation:marquee 20s linear infinite;white-space:nowrap;}
+.marquee-track span{font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:rgba(201,168,76,0.4);}
+.marquee-dot{color:var(--gold);font-size:0.5rem;}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  nav{padding:18px 32px;}
+  nav.scrolled{padding:12px 32px;}
+  section{padding:80px 32px;}
+  .about-grid,.contact-grid{grid-template-columns:1fr;gap:48px;}
+  .about-visual{max-width:400px;}
+  .services-grid{grid-template-columns:1fr 1fr;}
+  .works-grid{grid-template-columns:1fr 1fr;}
+  .work-card.wide{grid-column:span 1;}
+  .products-row{grid-template-columns:1fr 1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:40px;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+}
+@media(max-width:640px){
+  nav{padding:16px 20px;}
+  section{padding:60px 20px;}
+  .services-grid,.works-grid,.products-row{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+  .send-options{flex-direction:column;}
+  .services-header{flex-direction:column;align-items:flex-start;gap:20px;}
+  .footer-grid{grid-template-columns:1fr;}
+  #admin-panel{width:100%;}
+  .hero-btns{flex-direction:column;align-items:center;}
+  .about-accent-box{width:120px;height:120px;}
+  .about-accent-box .num{font-size:2.2rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo" id="nav-logo-text">LUXE<span>.</span>INTERIORS</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#works">Works</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact" class="btn-outline">Enquire Now</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMobileNav()" id="hamburger">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE NAV -->
+<div id="mobileNav" style="display:none;position:fixed;inset:0;background:rgba(20,17,16,0.98);z-index:999;padding:100px 40px;flex-direction:column;gap:32px;">
+  <ul style="list-style:none;display:flex;flex-direction:column;gap:24px;">
+    <li><a href="#about" onclick="toggleMobileNav()" style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--cream);text-decoration:none;">About</a></li>
+    <li><a href="#services" onclick="toggleMobileNav()" style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--cream);text-decoration:none;">Services</a></li>
+    <li><a href="#works" onclick="toggleMobileNav()" style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--cream);text-decoration:none;">Works</a></li>
+    <li><a href="#products" onclick="toggleMobileNav()" style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--cream);text-decoration:none;">Products</a></li>
+    <li><a href="#testimonials" onclick="toggleMobileNav()" style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--cream);text-decoration:none;">Testimonials</a></li>
+    <li><a href="#contact" onclick="toggleMobileNav()" style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--gold);text-decoration:none;">Contact</a></li>
+  </ul>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow" id="hero-eyebrow">Premium Interior Design Studio</p>
+    <h1 class="hero-title" id="hero-title">Where Spaces<br><em>Come Alive</em></h1>
+    <p class="hero-subtitle" id="hero-subtitle">We transform ordinary houses into extraordinary sanctuaries. Award-winning design, unparalleled craftsmanship — every detail, perfected.</p>
+    <div class="hero-btns">
+      <a href="#works" class="btn-gold">Explore Our Work</a>
+      <a href="#contact" class="btn-ghost">Get a Free Quote</a>
+    </div>
+  </div>
+  <div class="hero-scroll" id="heroScroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marquee-track">
+    <span>Living Rooms</span><span class="marquee-dot">◆</span>
+    <span>Bedrooms</span><span class="marquee-dot">◆</span>
+    <span>Kitchens</span><span class="marquee-dot">◆</span>
+    <span>Bathrooms</span><span class="marquee-dot">◆</span>
+    <span>Office Spaces</span><span class="marquee-dot">◆</span>
+    <span>Commercial</span><span class="marquee-dot">◆</span>
+    <span>Renovations</span><span class="marquee-dot">◆</span>
+    <span>Landscape</span><span class="marquee-dot">◆</span>
+    <span>Living Rooms</span><span class="marquee-dot">◆</span>
+    <span>Bedrooms</span><span class="marquee-dot">◆</span>
+    <span>Kitchens</span><span class="marquee-dot">◆</span>
+    <span>Bathrooms</span><span class="marquee-dot">◆</span>
+    <span>Office Spaces</span><span class="marquee-dot">◆</span>
+    <span>Commercial</span><span class="marquee-dot">◆</span>
+    <span>Renovations</span><span class="marquee-dot">◆</span>
+    <span>Landscape</span><span class="marquee-dot">◆</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-visual reveal">
+      <div class="about-main-img-placeholder" id="about-img-el">
+        <svg width="80" height="80" viewBox="0 0 80 80" style="opacity:0.2;" fill="none" stroke="#C9A84C" stroke-width="1">
+          <rect x="10" y="40" width="60" height="35"/><polygon points="40,10 5,40 75,40"/><rect x="30" y="55" width="20" height="20"/><rect x="14" y="46" width="14" height="14"/>
+        </svg>
+      </div>
+      <div class="about-accent-box">
+        <span class="num" id="about-years">12</span>
+        <span class="lbl">Years of<br>Excellence</span>
+      </div>
+    </div>
+    <div class="about-text reveal">
+      <span class="section-tag">Our Story</span>
+      <h2 class="section-title" id="about-title">Crafting Interiors<br>That Tell <em style="font-style:italic;color:var(--gold-light);">Your Story</em></h2>
+      <div class="section-line"></div>
+      <p id="about-desc1">Founded with a vision to redefine interior spaces, Luxe Interiors has been transforming homes and commercial spaces across the city for over a decade. We believe every space has a soul — our job is to reveal it.</p>
+      <p id="about-desc2">Our team of passionate designers combines timeless elegance with contemporary sensibility. From the initial concept to the final reveal, we're with you every step of the way, ensuring your vision becomes a breathtaking reality.</p>
+      <div class="about-stats">
+        <div class="stat-item"><div class="num" id="stat1-num">450+</div><div class="lbl" id="stat1-lbl">Projects Done</div></div>
+        <div class="stat-item"><div class="num" id="stat2-num">98%</div><div class="lbl" id="stat2-lbl">Happy Clients</div></div>
+        <div class="stat-item"><div class="num" id="stat3-num">18</div><div class="lbl" id="stat3-lbl">Design Awards</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-header">
+    <div>
+      <span class="section-tag">What We Do</span>
+      <h2 class="section-title" id="services-title">Our <em style="font-style:italic;color:var(--gold-light);">Services</em></h2>
+    </div>
+  </div>
+  <div class="services-grid" id="services-grid">
+    <!-- Rendered by JS -->
+  </div>
+</section>
+
+<!-- WORKS -->
+<section id="works">
+  <div class="works-header reveal">
+    <span class="section-tag">Portfolio</span>
+    <h2 class="section-title" id="works-title">Our <em style="font-style:italic;color:var(--gold-light);">Works</em></h2>
+    <div class="works-filter" id="works-filter">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="residential">Residential</button>
+      <button class="filter-btn" data-filter="commercial">Commercial</button>
+      <button class="filter-btn" data-filter="renovation">Renovation</button>
+    </div>
+  </div>
+  <div class="works-grid" id="works-grid">
+    <!-- Rendered by JS -->
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="products-header reveal">
+    <span class="section-tag">Trusted Brands</span>
+    <h2 class="section-title" id="products-title">Products We <em style="font-style:italic;color:var(--gold-light);">Trust</em></h2>
+    <div class="section-line"></div>
+    <p style="font-size:0.9rem;line-height:1.9;color:rgba(245,239,224,0.55);font-weight:300;max-width:520px;" id="products-desc">We partner with the world's finest material and finish brands to ensure every project meets our exacting standards of quality.</p>
+  </div>
+  <div class="products-row" id="products-grid">
+    <!-- Rendered by JS -->
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="testimonials-inner">
+    <div class="testimonials-header reveal">
+      <span class="section-tag">Client Stories</span>
+      <h2 class="section-title" id="testi-title">What Our Clients <em style="font-style:italic;color:var(--gold-light);">Say</em></h2>
+    </div>
+    <div class="swiper swiper-testimonials">
+      <div class="swiper-wrapper" id="testi-grid"></div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-info reveal">
+      <span class="section-tag">Get In Touch</span>
+      <h2 class="section-title" id="contact-title">Let's Create<br>Something <em style="font-style:italic;color:var(--gold-light);">Beautiful</em></h2>
+      <div class="section-line"></div>
+      <p id="contact-desc">Ready to transform your space? Reach out to us and let's begin your design journey. Our team is available Monday–Saturday, 9am–7pm.</p>
+      <div class="contact-details">
+        <div class="contact-item">
+          <div class="contact-item-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.86 9.8a19.79 19.79 0 01-3.07-8.63A2 2 0 012.77 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 8.69a16 16 0 006.29 6.29l1.05-1.05a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></div>
+          <div class="contact-item-text"><div class="label">Phone</div><div class="value" id="contact-phone">+91 98765 43210</div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <div class="contact-item-text"><div class="label">Email</div><div class="value" id="contact-email">hello@luxeinteriors.in</div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div class="contact-item-text"><div class="label">Studio</div><div class="value" id="contact-address">14, Design Quarter, Banjara Hills, Hyderabad — 500034</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENQUIRY FORM -->
+    <div class="enquiry-form reveal">
+      <h3>Send an Enquiry</h3>
+      <p class="sub">Fill in the details — we'll respond within 24 hours</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name *</label>
+          <input type="text" id="f-name" placeholder="Rajesh Kumar">
+        </div>
+        <div class="form-group">
+          <label>Phone Number *</label>
+          <input type="tel" id="f-phone" placeholder="+91 9XXXXXXXXX">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="f-email" placeholder="you@example.com">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Service Interested In</label>
+          <select id="f-service">
+            <option value="">Select a service</option>
+            <option>Full Home Interior</option>
+            <option>Modular Kitchen</option>
+            <option>Bedroom Design</option>
+            <option>Living Room</option>
+            <option>Commercial Space</option>
+            <option>Home Renovation</option>
+            <option>Consultation Only</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Budget Range</label>
+          <select id="f-budget">
+            <option value="">Select budget</option>
+            <option>₹2L – ₹5L</option>
+            <option>₹5L – ₹10L</option>
+            <option>₹10L – ₹25L</option>
+            <option>₹25L – ₹50L</option>
+            <option>₹50L+</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Your Message</label>
+        <textarea id="f-message" rows="4" placeholder="Tell us about your space, timeline, and any specific requirements..."></textarea>
+      </div>
+      <div class="send-options">
+        <button class="btn-whatsapp" onclick="sendToWhatsApp()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </button>
+        <button class="btn-telegram" onclick="sendToTelegram()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          Telegram
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a class="nav-logo" id="footer-logo">LUXE<span>.</span>INTERIORS</a>
+      <p id="footer-desc">Crafting dream spaces with passion, precision, and an eye for the extraordinary. Your home, reimagined.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Services</h5>
+      <ul>
+        <li><a href="#services">Full Home Interior</a></li>
+        <li><a href="#services">Modular Kitchen</a></li>
+        <li><a href="#services">Bedroom Design</a></li>
+        <li><a href="#services">Commercial</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#works">Portfolio</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="#" id="footer-phone">+91 98765 43210</a></li>
+        <li><a href="#" id="footer-email">hello@luxeinteriors.in</a></li>
+        <li><a href="#" id="footer-city">Hyderabad, India</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p id="footer-copy">© 2025 Luxe Interiors. All rights reserved.</p>
+    <div class="social-links">
+      <a href="#" id="social-instagram" title="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+      <a href="#" id="social-facebook" title="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+      <a href="#" id="social-youtube" title="YouTube"><svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58a2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="var(--charcoal)" stroke="none"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<!-- ADMIN TRIGGER -->
+<button class="admin-trigger" onclick="openAdmin()">⚙ Admin</button>
+
+<!-- ADMIN OVERLAY -->
+<div id="admin-overlay" onclick="closeAdmin()"></div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel">
+  <div class="admin-header">
+    <h2>⚙ Site Admin</h2>
+    <button class="admin-close" onclick="closeAdmin()">✕</button>
+  </div>
+  <div id="admin-content">
+    <!-- Login first -->
+    <div class="admin-login" id="admin-login-view">
+      <h3>Admin Access</h3>
+      <p>Enter your password to edit site content</p>
+      <div class="admin-field">
+        <label>Password</label>
+        <input type="password" id="admin-password-input" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')verifyAdmin()">
+      </div>
+      <button class="btn-save-admin" onclick="verifyAdmin()">Login to Admin</button>
+      <p style="font-size:0.7rem;color:rgba(245,239,224,0.25);margin-top:12px;">Default password: <strong style="color:var(--gold);">admin123</strong></p>
+    </div>
+    <div id="admin-edit-view" style="display:none;">
+      <!-- BRAND -->
+      <div class="admin-section">
+        <h3>Brand & Identity</h3>
+        <div class="admin-field"><label>Brand Name</label><input id="ae-brand" value="LUXE.INTERIORS"></div>
+        <div class="admin-field"><label>Tagline / Eyebrow</label><input id="ae-eyebrow" value="Premium Interior Design Studio"></div>
+      </div>
+      <!-- HERO -->
+      <div class="admin-section">
+        <h3>Hero Section</h3>
+        <div class="admin-field"><label>Hero Headline</label><input id="ae-hero-title" value="Where Spaces Come Alive"></div>
+        <div class="admin-field"><label>Hero Subtitle</label><textarea id="ae-hero-sub" rows="3">We transform ordinary houses into extraordinary sanctuaries. Award-winning design, unparalleled craftsmanship — every detail, perfected.</textarea></div>
+      </div>
+      <!-- ABOUT -->
+      <div class="admin-section">
+        <h3>About Section</h3>
+        <div class="admin-field"><label>Years of Experience</label><input id="ae-years" value="12"></div>
+        <div class="admin-field"><label>About Para 1</label><textarea id="ae-about1" rows="4">Founded with a vision to redefine interior spaces, Luxe Interiors has been transforming homes and commercial spaces across the city for over a decade. We believe every space has a soul — our job is to reveal it.</textarea></div>
+        <div class="admin-field"><label>About Para 2</label><textarea id="ae-about2" rows="4">Our team of passionate designers combines timeless elegance with contemporary sensibility. From the initial concept to the final reveal, we're with you every step of the way.</textarea></div>
+        <div class="admin-field"><label>Stat 1 (e.g. 450+)</label><input id="ae-stat1" value="450+"></div>
+        <div class="admin-field"><label>Stat 1 Label</label><input id="ae-stat1l" value="Projects Done"></div>
+        <div class="admin-field"><label>Stat 2 (e.g. 98%)</label><input id="ae-stat2" value="98%"></div>
+        <div class="admin-field"><label>Stat 2 Label</label><input id="ae-stat2l" value="Happy Clients"></div>
+        <div class="admin-field"><label>Stat 3 (e.g. 18)</label><input id="ae-stat3" value="18"></div>
+        <div class="admin-field"><label>Stat 3 Label</label><input id="ae-stat3l" value="Design Awards"></div>
+      </div>
+      <!-- CONTACT -->
+      <div class="admin-section">
+        <h3>Contact Details</h3>
+        <div class="admin-field"><label>WhatsApp Number (with country code, no +)</label><input id="ae-wa" value="919876543210"></div>
+        <div class="admin-field"><label>Telegram Username (without @)</label><input id="ae-tg" value="luxeinteriors"></div>
+        <div class="admin-field"><label>Display Phone</label><input id="ae-phone" value="+91 98765 43210"></div>
+        <div class="admin-field"><label>Email</label><input id="ae-email" value="hello@luxeinteriors.in"></div>
+        <div class="admin-field"><label>Address</label><input id="ae-address" value="14, Design Quarter, Banjara Hills, Hyderabad — 500034"></div>
+      </div>
+      <!-- SOCIAL -->
+      <div class="admin-section">
+        <h3>Social Links</h3>
+        <div class="admin-field"><label>Instagram URL</label><input id="ae-insta" value="https://instagram.com/luxeinteriors"></div>
+        <div class="admin-field"><label>Facebook URL</label><input id="ae-fb" value="https://facebook.com/luxeinteriors"></div>
+        <div class="admin-field"><label>YouTube URL</label><input id="ae-yt" value="https://youtube.com/@luxeinteriors"></div>
+      </div>
+      <!-- PASSWORD CHANGE -->
+      <div class="admin-section">
+        <h3>Change Admin Password</h3>
+        <div class="admin-field"><label>New Password</label><input type="password" id="ae-newpw" placeholder="Leave blank to keep current"></div>
+      </div>
+      <button class="btn-save-admin" onclick="saveAdminChanges()">💾 Save All Changes</button>
+      <div id="save-feedback" style="display:none;margin-top:12px;text-align:center;font-size:0.75rem;color:var(--gold);letter-spacing:2px;text-transform:uppercase;">✓ Changes Saved!</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA STORE (loaded from localStorage or defaults)
+// ============================================================
+const defaultData = {
+  brand: "LUXE.INTERIORS",
+  eyebrow: "Premium Interior Design Studio",
+  heroTitle: "Where Spaces Come Alive",
+  heroSub: "We transform ordinary houses into extraordinary sanctuaries. Award-winning design, unparalleled craftsmanship — every detail, perfected.",
+  aboutYears: "12",
+  about1: "Founded with a vision to redefine interior spaces, Luxe Interiors has been transforming homes and commercial spaces across the city for over a decade. We believe every space has a soul — our job is to reveal it.",
+  about2: "Our team of passionate designers combines timeless elegance with contemporary sensibility. From the initial concept to the final reveal, we're with you every step of the way, ensuring your vision becomes a breathtaking reality.",
+  stat1: "450+", stat1l: "Projects Done",
+  stat2: "98%", stat2l: "Happy Clients",
+  stat3: "18", stat3l: "Design Awards",
+  waNumber: "919876543210",
+  tgUsername: "luxeinteriors",
+  phone: "+91 98765 43210",
+  email: "hello@luxeinteriors.in",
+  address: "14, Design Quarter, Banjara Hills, Hyderabad — 500034",
+  insta: "https://instagram.com/luxeinteriors",
+  fb: "https://facebook.com/luxeinteriors",
+  yt: "https://youtube.com/@luxeinteriors",
+  adminPw: "admin123"
+};
+
+function loadData() {
+  try {
+    const saved = localStorage.getItem('luxe_site_data');
+    return saved ? { ...defaultData, ...JSON.parse(saved) } : { ...defaultData };
+  } catch(e) { return { ...defaultData }; }
+}
+
+function saveData(d) {
+  try { localStorage.setItem('luxe_site_data', JSON.stringify(d)); } catch(e) {}
+}
+
+const siteData = loadData();
+
+// ============================================================
+// SERVICES DATA
+// ============================================================
+const services = [
+  { icon: `<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`, title: "Full Home Interiors", desc: "Complete end-to-end interior design for your entire home — from concept to completion, every room transformed with precision." },
+  { icon: `<svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>`, title: "Modular Kitchen", desc: "Functional beauty meets ergonomic design. Our kitchens are crafted with premium cabinetry, smart storage, and stunning finishes." },
+  { icon: `<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>`, title: "Bedroom Design", desc: "Your bedroom is your sanctuary. We design peaceful, luxurious retreats tailored to your personal taste and lifestyle needs." },
+  { icon: `<svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`, title: "Living Room", desc: "The heart of your home. We create living spaces that balance aesthetics with comfort — perfect for hosting and unwinding." },
+  { icon: `<svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>`, title: "Commercial Interiors", desc: "Offices, retail stores, restaurants — we design commercial spaces that reinforce your brand and inspire productivity." },
+  { icon: `<svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>`, title: "Home Renovation", desc: "Breathing new life into existing spaces. Our renovation services modernize your home while respecting its original character." }
+];
+
+// ============================================================
+// WORKS DATA
+// ============================================================
+const works = [
+  { title: "The Kapoor Penthouse", category: "residential", tag: "Living Room", wide: true,
+    color: "linear-gradient(135deg,#3D2B1F 0%,#1A1208 100%)" },
+  { title: "Malhotra Villa", category: "residential", tag: "Full Home",
+    color: "linear-gradient(135deg,#2A3A2E 0%,#141A15 100%)" },
+  { title: "Reddy Residence", category: "renovation", tag: "Kitchen + Living",
+    color: "linear-gradient(135deg,#3A2A1A 0%,#1A1008 100%)" },
+  { title: "TechEdge Office", category: "commercial", tag: "Office Space",
+    color: "linear-gradient(135deg,#1A2535 0%,#0D1520 100%)" },
+  { title: "Sharma Suite", category: "residential", tag: "Bedroom",
+    color: "linear-gradient(135deg,#352520 0%,#1A1008 100%)" },
+  { title: "Café Terrazzo", category: "commercial", tag: "Restaurant", wide: true,
+    color: "linear-gradient(135deg,#2E2A1A 0%,#1A1508 100%)" },
+];
+
+// ============================================================
+// PRODUCTS DATA
+// ============================================================
+const products = [
+  { name: "Asian Paints", logo: "AP", category: "Paints", desc: "Premium wall textures and finishes for flawless surfaces." },
+  { name: "Häfele", logo: "Hä", category: "Hardware", desc: "German precision hardware for modular furniture and kitchens." },
+  { name: "Jaquar", logo: "JQ", category: "Sanitaryware", desc: "Luxury bathroom fittings and fixtures of international quality." },
+  { name: "Greenlam", logo: "GL", category: "Laminates", desc: "Premium laminates and surfaces with stunning textures." },
+  { name: "Godrej Interio", logo: "GI", category: "Furniture", desc: "Functional and elegant furniture solutions for every space." },
+  { name: "Kajaria", logo: "KJ", category: "Tiles", desc: "World-class ceramic and vitrified tiles for every surface." },
+  { name: "Hettich", logo: "HT", category: "Fittings", desc: "Innovative furniture fittings for seamless functionality." },
+  { name: "Duravit", logo: "DV", category: "Sanitary", desc: "Iconic bathroom design with German engineering excellence." }
+];
+
+// ============================================================
+// TESTIMONIALS DATA
+// ============================================================
+const testimonials = [
+  { text: "Luxe Interiors completely transformed our apartment into something from a magazine. The team's attention to detail is absolutely extraordinary — they thought of things we'd never even considered.", name: "Priya Sharma", role: "Homeowner, Jubilee Hills", initial: "P", rating: 5 },
+  { text: "We hired them for our corporate office and the results were beyond spectacular. Productivity has visibly improved, clients are always impressed, and the space reflects our brand perfectly.", name: "Arjun Mehta", role: "CEO, TechEdge Solutions", initial: "A", rating: 5 },
+  { text: "The modular kitchen they designed for us is a work of art. Every cabinet, every corner is perfectly thought out. Cooking has become a joy. Highly recommend to everyone!", name: "Sunita Reddy", role: "Homeowner, Banjara Hills", initial: "S", rating: 5 },
+  { text: "From the initial consultation to the final walkthrough, the entire experience was seamless and professional. They finished ahead of schedule and within budget!", name: "Vikram Nair", role: "Property Developer", initial: "V", rating: 5 },
+  { text: "Our bedroom is now our absolute favourite room. The warm tones, the lighting design, the custom wardrobe — every element tells a story. Thank you, Luxe Interiors!", name: "Kavya Patel", role: "Homeowner, Gachibowli", initial: "K", rating: 5 },
+];
+
+// ============================================================
+// RENDER FUNCTIONS
+// ============================================================
+function renderServices() {
+  const grid = document.getElementById('services-grid');
+  grid.innerHTML = services.map((s, i) => `
+    <div class="service-card reveal">
+      <div class="service-icon">${s.icon}</div>
+      <span class="service-num">0${i+1}</span>
+      <h3>${s.title}</h3>
+      <p>${s.desc}</p>
+      <a href="#contact" class="service-link">Enquire →</a>
+    </div>
+  `).join('');
+}
+
+function renderWorks(filter = 'all') {
+  const grid = document.getElementById('works-grid');
+  const filtered = filter === 'all' ? works : works.filter(w => w.category === filter);
+  grid.innerHTML = filtered.map(w => `
+    <div class="work-card ${w.wide ? 'wide' : ''}">
+      <div class="work-img-placeholder" style="background:${w.color};">
+        <span class="work-label">${w.title}</span>
+      </div>
+      <div class="work-overlay">
+        <div class="work-info">
+          <h4>${w.title}</h4>
+          <span>${w.tag}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderProducts() {
+  const grid = document.getElementById('products-grid');
+  grid.innerHTML = products.map(p => `
+    <div class="product-card reveal">
+      <div class="product-logo"><span class="product-logo-text">${p.logo}</span></div>
+      <h4>${p.name}</h4>
+      <p>${p.desc}</p>
+      <span class="product-tag">${p.category}</span>
+    </div>
+  `).join('');
+}
+
+function renderTestimonials() {
+  const grid = document.getElementById('testi-grid');
+  grid.innerHTML = testimonials.map(t => `
+    <div class="swiper-slide">
+      <div class="testi-card">
+        <div class="testi-stars">${'★'.repeat(t.rating)}</div>
+        <p class="testi-text">${t.text}</p>
+        <div class="testi-author">
+          <div class="testi-avatar">${t.initial}</div>
+          <div>
+            <div class="testi-name">${t.name}</div>
+            <div class="testi-role">${t.role}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// APPLY SITE DATA TO DOM
+// ============================================================
+function applySiteData(d) {
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  const setHtml = (id, val) => { const el = document.getElementById(id); if(el) el.innerHTML = val; };
+
+  // Logo text
+  document.querySelectorAll('#nav-logo-text, #footer-logo').forEach(el => {
+    const [name, dot] = d.brand.split('.');
+    el.innerHTML = `${name}<span>.</span>${dot||''}`;
+  });
+
+  set('hero-eyebrow', d.eyebrow);
+  set('hero-subtitle', d.heroSub);
+  set('about-years', d.aboutYears);
+  set('about-desc1', d.about1);
+  set('about-desc2', d.about2);
+  set('stat1-num', d.stat1); set('stat1-lbl', d.stat1l);
+  set('stat2-num', d.stat2); set('stat2-lbl', d.stat2l);
+  set('stat3-num', d.stat3); set('stat3-lbl', d.stat3l);
+  set('contact-phone', d.phone);
+  set('contact-email', d.email);
+  set('contact-address', d.address);
+  set('footer-phone', d.phone);
+  set('footer-email', d.email);
+
+  // Social links
+  const si = document.getElementById('social-instagram');
+  const sf = document.getElementById('social-facebook');
+  const sy = document.getElementById('social-youtube');
+  if(si) si.href = d.insta;
+  if(sf) sf.href = d.fb;
+  if(sy) sy.href = d.yt;
+
+  // Hero title with italic
+  const ht = document.getElementById('hero-title');
+  if(ht) {
+    const parts = d.heroTitle.split('Come Alive');
+    if(parts.length > 1) ht.innerHTML = `${parts[0]}<br><em>Come Alive</em>${parts[1]}`;
+    else ht.textContent = d.heroTitle;
+  }
+}
+
+// ============================================================
+// ENQUIRY — WHATSAPP & TELEGRAM
+// ============================================================
+function getFormData() {
+  const d = loadData();
+  return {
+    name: document.getElementById('f-name').value.trim(),
+    phone: document.getElementById('f-phone').value.trim(),
+    email: document.getElementById('f-email').value.trim(),
+    service: document.getElementById('f-service').value,
+    budget: document.getElementById('f-budget').value,
+    message: document.getElementById('f-message').value.trim(),
+    waNumber: d.waNumber,
+    tgUsername: d.tgUsername
+  };
+}
+
+function validateForm() {
+  const f = getFormData();
+  if (!f.name) { alert('Please enter your name.'); return false; }
+  if (!f.phone) { alert('Please enter your phone number.'); return false; }
+  return true;
+}
+
+function buildMessage(f) {
+  return `*New Interior Design Enquiry* 🏠
+
+*Name:* ${f.name}
+*Phone:* ${f.phone}
+*Email:* ${f.email || 'Not provided'}
+*Service:* ${f.service || 'Not specified'}
+*Budget:* ${f.budget || 'Not specified'}
+
+*Message:*
+${f.message || 'No additional message'}
+
+_Sent via Luxe Interiors website_`;
+}
+
+function sendToWhatsApp() {
+  if (!validateForm()) return;
+  const f = getFormData();
+  const msg = encodeURIComponent(buildMessage(f));
+  window.open(`https://wa.me/${f.waNumber}?text=${msg}`, '_blank');
+}
+
+function sendToTelegram() {
+  if (!validateForm()) return;
+  const f = getFormData();
+  const msg = encodeURIComponent(buildMessage(f));
+  window.open(`https://t.me/${f.tgUsername}?text=${msg}`, '_blank');
+}
+
+// ============================================================
+// WORKS FILTER
+// ============================================================
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('filter-btn')) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    renderWorks(e.target.dataset.filter);
+  }
+});
+
+// ============================================================
+// ADMIN PANEL
+// ============================================================
+function openAdmin() {
+  document.getElementById('admin-panel').classList.add('open');
+  document.getElementById('admin-overlay').classList.add('open');
+  // Pre-fill fields
+  const d = loadData();
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+  set('ae-brand', d.brand); set('ae-eyebrow', d.eyebrow);
+  set('ae-hero-title', d.heroTitle); set('ae-hero-sub', d.heroSub);
+  set('ae-years', d.aboutYears);
+  set('ae-about1', d.about1); set('ae-about2', d.about2);
+  set('ae-stat1', d.stat1); set('ae-stat1l', d.stat1l);
+  set('ae-stat2', d.stat2); set('ae-stat2l', d.stat2l);
+  set('ae-stat3', d.stat3); set('ae-stat3l', d.stat3l);
+  set('ae-wa', d.waNumber); set('ae-tg', d.tgUsername);
+  set('ae-phone', d.phone); set('ae-email', d.email); set('ae-address', d.address);
+  set('ae-insta', d.insta); set('ae-fb', d.fb); set('ae-yt', d.yt);
+}
+
+function closeAdmin() {
+  document.getElementById('admin-panel').classList.remove('open');
+  document.getElementById('admin-overlay').classList.remove('open');
+}
+
+function verifyAdmin() {
+  const d = loadData();
+  const input = document.getElementById('admin-password-input').value;
+  if (input === d.adminPw) {
+    document.getElementById('admin-login-view').style.display = 'none';
+    document.getElementById('admin-edit-view').style.display = 'block';
+  } else {
+    document.getElementById('admin-password-input').style.borderColor = '#e05252';
+    setTimeout(() => document.getElementById('admin-password-input').style.borderColor = '', 1500);
+    alert('Incorrect password. Try: admin123');
+  }
+}
+
+function saveAdminChanges() {
+  const get = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+  const d = loadData();
+  const newPw = get('ae-newpw');
+
+  const updated = {
+    ...d,
+    brand: get('ae-brand'), eyebrow: get('ae-eyebrow'),
+    heroTitle: get('ae-hero-title'), heroSub: get('ae-hero-sub'),
+    aboutYears: get('ae-years'),
+    about1: get('ae-about1'), about2: get('ae-about2'),
+    stat1: get('ae-stat1'), stat1l: get('ae-stat1l'),
+    stat2: get('ae-stat2'), stat2l: get('ae-stat2l'),
+    stat3: get('ae-stat3'), stat3l: get('ae-stat3l'),
+    waNumber: get('ae-wa'), tgUsername: get('ae-tg'),
+    phone: get('ae-phone'), email: get('ae-email'), address: get('ae-address'),
+    insta: get('ae-insta'), fb: get('ae-fb'), yt: get('ae-yt'),
+    adminPw: newPw || d.adminPw
+  };
+
+  saveData(updated);
+  Object.assign(siteData, updated);
+  applySiteData(updated);
+
+  const fb = document.getElementById('save-feedback');
+  fb.style.display = 'block';
+  setTimeout(() => fb.style.display = 'none', 2500);
+}
+
+// ============================================================
+// MOBILE NAV
+// ============================================================
+function toggleMobileNav() {
+  const mn = document.getElementById('mobileNav');
+  const isOpen = mn.style.display === 'flex';
+  mn.style.display = isOpen ? 'none' : 'flex';
+  document.getElementById('hamburger').querySelectorAll('span')[1].style.opacity = isOpen ? '1' : '0';
+}
+
+// ============================================================
+// CUSTOM CURSOR
+// ============================================================
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+
+function animateCursor() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  cursorRing.style.left = rx + 'px';
+  cursorRing.style.top = ry + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+document.querySelectorAll('a,button').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursorRing.style.transform = 'translate(-50%,-50%) scale(1.8)'; cursorRing.style.borderColor = 'rgba(201,168,76,0.9)'; });
+  el.addEventListener('mouseleave', () => { cursorRing.style.transform = 'translate(-50%,-50%) scale(1)'; cursorRing.style.borderColor = 'rgba(201,168,76,0.6)'; });
+});
+
+// ============================================================
+// SCROLL PROGRESS + NAV
+// ============================================================
+window.addEventListener('scroll', () => {
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('scrollProgress').style.width = pct + '%';
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ============================================================
+// SCROLL REVEAL
+// ============================================================
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.12 });
+
+function observeReveal() {
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+}
+
+// ============================================================
+// THREE.JS HERO — 3D House + Paint Splash
+// ============================================================
+function initHero3D() {
+  const canvas = document.getElementById('hero-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(0, 2, 10);
+
+  // Lights
+  const ambientLight = new THREE.AmbientLight(0xfff5e0, 0.6);
+  scene.add(ambientLight);
+
+  const warmLight = new THREE.PointLight(0xC9A84C, 3, 20);
+  warmLight.position.set(4, 5, 4);
+  scene.add(warmLight);
+
+  const fillLight = new THREE.DirectionalLight(0xffeedd, 0.8);
+  fillLight.position.set(-3, 3, 2);
+  scene.add(fillLight);
+
+  // Materials
+  const wallMat = new THREE.MeshLambertMaterial({ color: 0x2C1F14 });
+  const roofMat = new THREE.MeshLambertMaterial({ color: 0x1A0E07 });
+  const windowMat = new THREE.MeshBasicMaterial({ color: 0xC9A84C, transparent: true, opacity: 0.7 });
+  const doorMat = new THREE.MeshLambertMaterial({ color: 0x5C3D28 });
+  const floorMat = new THREE.MeshLambertMaterial({ color: 0x3A2010 });
+  const accentMat = new THREE.MeshBasicMaterial({ color: 0xC9A84C });
+  const glassMat = new THREE.MeshBasicMaterial({ color: 0x88BBCC, transparent: true, opacity: 0.4 });
+  const wallColorMat = new THREE.MeshLambertMaterial({ color: 0xD4A96A, transparent: true, opacity: 0 });
+
+  // === HOUSE GROUP ===
+  const house = new THREE.Group();
+  scene.add(house);
+
+  // Base floor
+  const floorGeo = new THREE.BoxGeometry(6, 0.15, 4);
+  const floor = new THREE.Mesh(floorGeo, floorMat);
+  floor.position.y = -1.5;
+  house.add(floor);
+
+  // Main walls
+  const frontWall = new THREE.Mesh(new THREE.BoxGeometry(6, 3.5, 0.15), wallMat);
+  frontWall.position.set(0, 0.2, 2);
+  house.add(frontWall);
+
+  const backWall = new THREE.Mesh(new THREE.BoxGeometry(6, 3.5, 0.15), wallMat);
+  backWall.position.set(0, 0.2, -2);
+  house.add(backWall);
+
+  const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.15, 3.5, 4), wallMat);
+  leftWall.position.set(-3, 0.2, 0);
+  house.add(leftWall);
+
+  const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.15, 3.5, 4), wallMat);
+  rightWall.position.set(3, 0.2, 0);
+  house.add(rightWall);
+
+  // Roof (pitched)
+  const roofGeo = new THREE.ConeGeometry(4.5, 2, 4);
+  const roof = new THREE.Mesh(roofGeo, roofMat);
+  roof.position.set(0, 2.9, 0);
+  roof.rotation.y = Math.PI / 4;
+  house.add(roof);
+
+  // Door
+  const door = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.6, 0.05), doorMat);
+  door.position.set(0, -0.3, 2.1);
+  house.add(door);
+
+  // Door frame
+  const dfMat = new THREE.MeshLambertMaterial({ color: 0xC9A84C });
+  const dfLeft = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.7, 0.08), dfMat);
+  dfLeft.position.set(-0.43, -0.3, 2.1);
+  house.add(dfLeft);
+  const dfRight = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.7, 0.08), dfMat);
+  dfRight.position.set(0.43, -0.3, 2.1);
+  house.add(dfRight);
+  const dfTop = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.06, 0.08), dfMat);
+  dfTop.position.set(0, 0.55, 2.1);
+  house.add(dfTop);
+
+  // Windows (front)
+  [[- 1.6, 0.4], [1.6, 0.4]].forEach(([x, y]) => {
+    const wFrame = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.9, 0.06), dfMat);
+    wFrame.position.set(x, y, 2.1);
+    house.add(wFrame);
+    const wGlass = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.75, 0.04), glassMat);
+    wGlass.position.set(x, y, 2.12);
+    house.add(wGlass);
+    // Gold cross
+    const wh = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.03, 0.06), accentMat);
+    wh.position.set(x, y, 2.12);
+    house.add(wh);
+    const wv = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.75, 0.06), accentMat);
+    wv.position.set(x, y, 2.12);
+    house.add(wv);
+  });
+
+  // Side windows
+  [[-2, 0.4, -1.4], [-2, 0.4, 1.4]].forEach(([x, y, z]) => {
+    const sw = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.85, 1.1), windowMat);
+    sw.position.set(x, y, z);
+    house.add(sw);
+  });
+
+  // Chimney
+  const chimney = new THREE.Mesh(new THREE.BoxGeometry(0.4, 1.2, 0.4), roofMat);
+  chimney.position.set(1.5, 3.4, -0.5);
+  house.add(chimney);
+
+  // Decorative gold trim at roofline
+  const trim = new THREE.Mesh(new THREE.BoxGeometry(6.2, 0.08, 0.12), accentMat);
+  trim.position.set(0, 1.95, 2.0);
+  house.add(trim);
+
+  // Interior color splash wall (fades in)
+  const splashWall = new THREE.Mesh(new THREE.BoxGeometry(5.8, 3.3, 0.02), wallColorMat);
+  splashWall.position.set(0, 0.2, 1.95);
+  house.add(splashWall);
+
+  // Floating color spheres (paint blobs)
+  const blobColors = [0xC9A84C, 0xB8613E, 0x7A9180, 0xE8C97A, 0x5C3D28];
+  const blobs = blobColors.map((color, i) => {
+    const geo = new THREE.SphereGeometry(0.18 + Math.random() * 0.22, 16, 16);
+    const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0 });
+    const mesh = new THREE.Mesh(geo, mat);
+    const angle = (i / blobColors.length) * Math.PI * 2;
+    mesh.position.set(Math.cos(angle) * 2.5, Math.sin(angle) * 1.5 + 0.2, 2.2);
+    scene.add(mesh);
+    return { mesh, mat, targetX: (Math.random() - 0.5) * 5, targetY: (Math.random() - 0.5) * 3 + 0.5, speed: 0.3 + Math.random() * 0.3 };
+  });
+
+  // Particle system — floating dust
+  const pCount = 80;
+  const pGeo = new THREE.BufferGeometry();
+  const pPos = new Float32Array(pCount * 3);
+  for (let i = 0; i < pCount; i++) {
+    pPos[i * 3] = (Math.random() - 0.5) * 12;
+    pPos[i * 3 + 1] = (Math.random() - 0.5) * 8;
+    pPos[i * 3 + 2] = (Math.random() - 0.5) * 8;
+  }
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  const pMat = new THREE.PointsMaterial({ color: 0xC9A84C, size: 0.04, transparent: true, opacity: 0.4 });
+  const particles = new THREE.Points(pGeo, pMat);
+  scene.add(particles);
+
+  house.scale.set(0, 0, 0);
+  house.rotation.y = -Math.PI * 0.3;
+
+  let phase = 0; // 0=build, 1=splash, 2=ambient
+  let t = 0;
+  let splashDone = false;
+
+  function animate() {
+    requestAnimationFrame(animate);
+    t += 0.008;
+
+    // Phase 0: House builds in
+    if (phase === 0) {
+      house.scale.x += (1 - house.scale.x) * 0.05;
+      house.scale.y += (1 - house.scale.y) * 0.05;
+      house.scale.z += (1 - house.scale.z) * 0.05;
+      house.rotation.y += (0 - house.rotation.y) * 0.04;
+      if (house.scale.x > 0.95 && !splashDone) {
+        splashDone = true;
+        setTimeout(() => { phase = 1; }, 800);
+      }
+    }
+
+    // Phase 1: Paint splash — blobs fly out, wall colors
+    if (phase === 1) {
+      blobs.forEach(b => {
+        b.mat.opacity += 0.03;
+        b.mesh.position.x += (b.targetX - b.mesh.position.x) * b.speed * 0.08;
+        b.mesh.position.y += (b.targetY - b.mesh.position.y) * b.speed * 0.08;
+        b.mesh.scale.x += 0.02;
+        b.mesh.scale.y += 0.02;
+      });
+      wallColorMat.opacity += 0.005;
+      if (wallColorMat.opacity > 0.35) {
+        wallColorMat.opacity = 0.35;
+        phase = 2;
+      }
+    }
+
+    // Phase 2: Ambient gentle movement
+    if (phase >= 1) {
+      house.rotation.y = Math.sin(t * 0.5) * 0.15;
+      house.position.y = Math.sin(t * 0.7) * 0.08;
+      warmLight.intensity = 2.8 + Math.sin(t * 1.5) * 0.4;
+      warmLight.position.x = Math.sin(t) * 3;
+    }
+
+    particles.rotation.y += 0.0008;
+    particles.rotation.x += 0.0003;
+
+    camera.position.x = Math.sin(t * 0.2) * 0.5;
+    camera.lookAt(0, 0.5, 0);
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+}
+
+// ============================================================
+// GSAP ANIMATIONS
+// ============================================================
+function initAnimations() {
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Hero entrance
+  gsap.to('.hero-eyebrow', { opacity: 1, y: 0, duration: 1, delay: 0.5, ease: 'power3.out' });
+  gsap.to('.hero-title', { opacity: 1, y: 0, duration: 1.2, delay: 0.8, ease: 'power3.out' });
+  gsap.to('.hero-subtitle', { opacity: 1, y: 0, duration: 1, delay: 1.1, ease: 'power3.out' });
+  gsap.to('.hero-btns', { opacity: 1, y: 0, duration: 1, delay: 1.4, ease: 'power3.out' });
+  gsap.to('#heroScroll', { opacity: 1, duration: 1, delay: 2, ease: 'power2.out' });
+
+  // Section lines
+  gsap.utils.toArray('.section-line').forEach(el => {
+    gsap.from(el, {
+      scaleX: 0, duration: 0.8, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 85%' }
+    });
+  });
+
+  // Parallax on about visual
+  gsap.to('.about-visual', {
+    y: -40,
+    scrollTrigger: {
+      trigger: '#about',
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: 1.5
+    }
+  });
+}
+
+// ============================================================
+// SWIPER
+// ============================================================
+function initSwiper() {
+  new Swiper('.swiper-testimonials', {
+    slidesPerView: 1,
+    spaceBetween: 24,
+    pagination: { el: '.swiper-pagination', clickable: true },
+    loop: true,
+    autoplay: { delay: 5000, disableOnInteraction: false },
+    breakpoints: {
+      768: { slidesPerView: 2 },
+      1024: { slidesPerView: 3 }
+    }
+  });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  applySiteData(siteData);
+  renderServices();
+  renderWorks();
+  renderProducts();
+  renderTestimonials();
+  initHero3D();
+  initAnimations();
+  initSwiper();
+  observeReveal();
+
+  // Re-observe after render
+  setTimeout(observeReveal, 300);
+});
+</script>
+</body>
+</html>
